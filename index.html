@@ -66,43 +66,48 @@
             "Frasier"
         ];
 
+        var APIkey = "q9CGcggx5BEpVZZ63u4a2I817X5LVIvy";
+        var sampleURL = "http://api.giphy.com/v1/gifs/search?q=SNL&api_key=q9CGcggx5BEpVZZ63u4a2I817X5LVIvy&limit=5";
+
+        var gifCounter = 0;
+
         function displayGifs() {
 
             var category = $(this).attr("data-name");
-            var APIkey = "q9CGcggx5BEpVZZ63u4a2I817X5LVIvy";
+            
             var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + category + "&api_key=" + APIkey + "&limit=5";
 
+        
             // Creating an AJAX call for the specific category button being clicked
             $.ajax({
                 url: queryURL,
                 method: "GET"
             }).then(function (response) {
+                console.log(queryURL);
                 console.log(response);
 
-                // Creating a div to hold the category
-                var categoryDiv = $("<div class='category'>");
+                for (var i = 0; i < response.data.length; i++) {
+                    console.log(response.data[i].rating);
+                    console.log(response.data[i].images.original.url);
+                    console.log(response.data[i].images.original_still.url);
 
-                // Storing the rating data
-                var rating = response.data.rating;
-                console.log(rating);
+                    var rating = response.data[i].rating;
+                    var stillGif = response.data[i].images.original_still.url;
+                    var animatedGif = response.data[i].images.original.url;
 
-                // Creating an element to have the rating displayed
-                var para = $("<p>").text("Rating: " + rating);
 
-                // Displaying the rating
-                categoryDiv.prepend(para);
+                    // Start adding to the HTML here
+                    var wellDiv = $("<div>");
+                        wellDiv.addClass("well well-lg");
+                        wellDiv.attr("id", "articleDiv-" + i);
+                        $("#gifs-view").append(wellDiv);
 
-                var image = response.data.forEach((gif) => {
-                    $("#gifs-view").append(`<img src="${gif.images.original.url}">`);
-                    $("#gifs-view").append(response.data.rating);
+                    // Attach the content to the appropriate well
+                    $("#articleDiv-" + i).append("Rating: " + rating);
+                    $("#articleDiv-" + i).append("<img src='" + animatedGif + "'>");
+                }
 
-                });
 
-                // Appending the image
-                categoryDiv.append(image);
-
-                // Putting the gif and the rationg above the previous gifs
-                $("#gifs-view").prepend(categoryDiv);
 
             });
         }
