@@ -1,0 +1,52 @@
+h1 {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    font-family: 'Lexend Tera', sans-serif;
+    text-transform: uppercase;
+    color: #303030;
+}
+html {
+    background-color: black;
+}
+body {
+    background-color: black;
+    
+}
+.card {
+    margin: 20px 20px 20px 0px;
+    float: left;
+}
+.card-text {
+    padding: 10px;
+}
+button {
+    margin: 5px;
+}
+.btn {
+    background-color: #a50000;
+    font-family: 'Lexend Exa', sans-serif;
+    font-size: 75%;
+}
+.btn:hover {
+    background-color: #8c0000;
+}
+#topic-form{
+    background-color: #808080;
+    border-radius: 10px;
+    /* background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(128,128,128,1) 50%, rgba(0,0,0,1) 100%); */
+    padding: 20px;
+
+}
+#buttons-view {
+    margin-bottom: 20px;
+}
+#topic-input {
+    margin: 0 10px 0 10px;
+}
+label {
+    font-size: 115%;
+}
+p {
+    font-family: 'Lexend Exa', sans-serif;
+    font-size: 75%;
+}
