@@ -138,6 +138,9 @@ $("#add-topic").on("click", function (event) {
 
     // this regenerates all the buttons from the array (instead of just adding a new one)
     renderButtons();
+
+    // Clear previous input
+    $("#topic-input").val("");
 });
 
 // When you click a button, that loads all the gifs from the function above
