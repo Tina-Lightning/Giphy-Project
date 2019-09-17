@@ -66,18 +66,20 @@
             "Frasier"
         ];
 
+        // Variables related to the GiphY API
+
         var APIkey = "q9CGcggx5BEpVZZ63u4a2I817X5LVIvy";
         var sampleURL = "http://api.giphy.com/v1/gifs/search?q=SNL&api_key=q9CGcggx5BEpVZZ63u4a2I817X5LVIvy&limit=5";
 
-        var gifCounter = 0;
 
+        // Function for displaying the gifs
         function displayGifs() {
 
             var category = $(this).attr("data-name");
-            
-            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + category + "&api_key=" + APIkey + "&limit=5";
 
-        
+            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + category + "&api_key=" + APIkey + "&limit=10";
+
+
             // Creating an AJAX call for the specific category button being clicked
             $.ajax({
                 url: queryURL,
@@ -86,75 +88,107 @@
                 console.log(queryURL);
                 console.log(response);
 
+                $("#gifs-view").empty();
+
                 for (var i = 0; i < response.data.length; i++) {
+
+                    // Check to see that the correct data is being pulled
                     console.log(response.data[i].rating);
                     console.log(response.data[i].images.original.url);
                     console.log(response.data[i].images.original_still.url);
 
+                    // Create local variables for that data
                     var rating = response.data[i].rating;
                     var stillGif = response.data[i].images.original_still.url;
                     var animatedGif = response.data[i].images.original.url;
 
-
-                    // Start adding to the HTML here
+                    // Create a well div for the image and the rating
                     var wellDiv = $("<div>");
-                        wellDiv.addClass("well well-lg");
-                        wellDiv.attr("id", "articleDiv-" + i);
-                        $("#gifs-view").append(wellDiv);
+                    wellDiv.addClass("well well-lg");
+                    wellDiv.attr("id", "articleDiv-" + i);
+                    $("#gifs-view").append(wellDiv);
 
                     // Attach the content to the appropriate well
-                    $("#articleDiv-" + i).append("Rating: " + rating);
-                    $("#articleDiv-" + i).append("<img src='" + animatedGif + "'>");
+                    if (response.data[i].rating != "null") {
+                        $("#articleDiv-" + i).append("Rating: " + rating);
+                    }
+
+                    // Create an image tag for each of the gifs with all the different attributes
+                    var gifImg = $("<img>");
+                    gifImg.addClass("gif");
+                    gifImg.attr("data-state", "still");
+                    gifImg.attr("data-still", stillGif);
+                    gifImg.attr("data-animate", animatedGif);
+                    gifImg.attr("src", stillGif);
+
+                    // Attach the gifs to the divs on the webpage
+                    $("#articleDiv-" + i).append(gifImg);
                 }
-
-
-
             });
         }
+
+        // Function for changing gifs from still to animated
+        $(document).on("click", ".gif", function () {
+
+            // Local variables that collect the attribute data
+            var state = $(this).attr("data-state");
+            var animateVal = $(this).attr("data-animate");
+            var stillVal = $(this).attr("data-still");
+
+            // Check the variable's data state and then switch it from still to animate and change the src attribute from still to animate
+            if (state === "still") {
+                $(this).attr({
+                    src: animateVal,
+                    "data-state": "animate"
+                });
+            } else {
+                $(this).attr({
+                    src: stillVal,
+                    "data-state": "still"
+                });
+            }
+        });
+
 
         // Function for displaying buttons
         function renderButtons() {
 
             // Deleting the category buttons prior to adding new category buttons
-            // (this is necessary otherwise we will have repeat buttons)
             $("#buttons-view").empty();
 
             // Looping through the array of topics
             for (var i = 0; i < topics.length; i++) {
 
-                // Then dynamicaly generating buttons for each topic in the array.
-                // This code $("<button>") is all jQuery needs to create the start and end tag. (<button></button>)
+                // Code that creates the HTML that is added to the webpage
                 var newBtn = $("<button>");
-                // Adding a class
                 newBtn.addClass("topic-btn");
-                // Adding a data-attribute with a value of the topic at index i
                 newBtn.attr("data-name", topics[i]);
-                // Providing the button's text with a value of the topic at index i
                 newBtn.text(topics[i]);
-                // Adding the button to the HTML
+
+                // add that new HTML to the buttons section of the webpage
                 $("#buttons-view").append(newBtn);
             }
         }
 
-        // This function handles events where one button is clicked
+        // Function for adding new topic buttons
         $("#add-topic").on("click", function (event) {
-            // event.preventDefault() prevents the form from trying to submit itself.
-            // We're using a form so that the user can hit enter instead of clicking the button if they want
+
+            // prevent page from reloading
             event.preventDefault();
 
-            // This line will grab the text from the input box
+            // This grabs the new topic
             var newTopic = $("#topic-input").val().trim();
-            // The topic from the textbox is then added to our array
+            // then adds the topic to the array
             topics.push(newTopic);
 
-            // calling renderButtons which handles the processing of our topics array
+            // this regenerates all the buttons from the array (instead of just adding a new one)
             renderButtons();
         });
 
-        // Adding a click event listener to all elements with a class of "topic-btn"
+        // When you click a button, that loads all the gifs from the function above
         $(document).on("click", ".topic-btn", displayGifs);
 
-        // Calling the renderButtons function at least once to display the initial list of topics
+        // This function needs to be called when the page loads to load the buttons in the intial array
         renderButtons();
 
 
