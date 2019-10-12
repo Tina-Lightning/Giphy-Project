@@ -24,7 +24,7 @@ function displayGifs() {
 
     var category = $(this).attr("data-name");
 
-    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + category + "&api_key=" + APIkey + "&limit=10";
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + category + "&api_key=" + APIkey + "&limit=10";
 
 
     // Creating an AJAX call for the specific category button being clicked
